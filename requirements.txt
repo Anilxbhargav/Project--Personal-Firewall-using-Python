@@ -1,0 +1,4 @@
+scapy==2.5.0
+customtkinter==5.2.2
+matplotlib==3.8.2
+psutil==5.9.6
