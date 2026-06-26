@@ -1,0 +1,9 @@
+Advanced_Firewall/
+│
+├── main.py               # Application entry point
+├── config.json           # Dynamic configuration parameters
+├── requirements.txt      # Dependency list
+├── utils.py              # Helpers, validation, and structured logging
+├── firewall.py           # Core packet sniffer, threat detection, OS-level blocking
+├── ui.py                 # Modern CustomTkinter Dashboard & GUI
+└── README.md             # Project documentation
