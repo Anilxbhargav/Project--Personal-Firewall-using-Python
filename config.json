@@ -1,0 +1,17 @@
+{
+    "settings": {
+        "time_window_seconds": 10,
+        "dos_threshold": 100,
+        "port_scan_threshold": 15,
+        "log_file": "firewall_events.log",
+        "log_rotation_bytes": 5242880,
+        "backup_count": 3
+    },
+    "whitelist": [
+        "127.0.0.1",
+        "192.168.1.1",
+        "192.168.0.1",
+        "8.8.8.8"
+    ],
+    "blacklist": []
+}
