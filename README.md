@@ -1,94 +1,173 @@
-# 🛡️ Python Personal Firewall
 
-A lightweight, GUI-driven **Personal Firewall** built with **Python** and **Tkinter**. This tool is designed to monitor, log, and block suspicious IP packets in real-time. By leveraging `scapy` for network analysis and `iptables` for traffic filtering, it automatically detects potential Denial of Service (DoS) attacks while offering manual overriding capabilities.
+
+```markdown
+<div align="center">
+  <img src="https://img.shields.io/badge/Python-3.8%2B-blue?style=for-the-badge&logo=python&logoColor=white" alt="Python">
+  <img src="https://img.shields.io/badge/Platform-Windows%20%7C%20Linux-lightgrey?style=for-the-badge&logo=linux" alt="Platform">
+  <img src="https://img.shields.io/badge/Security-IPS%20%2F%20IDS-red?style=for-the-badge&logo=security" alt="Security">
+  <img src="https://img.shields.io/badge/UI-CustomTkinter-brightgreen?style=for-the-badge" alt="UI">
+  <img src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge" alt="License">
+  
+  <h1>🛡️ ShieldX - Advanced Python IPS & Firewall</h1>
+  <p><b>Enterprise-Grade Intrusion Prevention System and Network Traffic Monitor</b></p>
+</div>
+
+---
+
+## 📖 Project Overview
+
+**ShieldX** is an advanced, cross-platform Personal Firewall and Intrusion Prevention System (IPS) built entirely in Python. Unlike standard firewalls that only rely on static rules, ShieldX actively sniffs network packets in real-time, analyzes traffic patterns using heuristic algorithms, and dynamically interfaces with the host operating system (`netsh` on Windows, `iptables` on Linux) to block malicious actors before they can compromise the system.
+
+Built with a thread-safe architecture and a modern, asynchronous graphical interface using `CustomTkinter`, ShieldX is designed for performance, reliability, and ease of use.
 
 ---
 
 ## ✨ Key Features
 
-* **Real-Time Packet Sniffing:** Continuously analyzes incoming network traffic using Scapy.
-* **Intelligent Auto-Detection:** Automatically identifies and mitigates potential DoS attacks based on traffic volume thresholds.
-* **Manual Intervention:** User-friendly GUI allows for immediate manual blocking of specific, suspicious IP addresses.
-* **Comprehensive Logging:** Maintains a detailed, timestamped record of all intercepted packets and blocked IPs.
-* **Live Status Updates:** Real-time feedback and alerts displayed directly on the Tkinter interface.
+* 🔬 **Deep Packet Inspection:** Utilizes `Scapy` to intercept and analyze raw TCP/UDP packets in real-time.
+* 🧠 **Heuristic Threat Detection:** Automatically detects and mitigates:
+  * **DoS (Denial of Service) & SYN Floods:** Analyzes packet flow rates to identify connection anomalies.
+  * **Port Scanning:** Detects aggressive multi-port probing from single IPs.
+* 🛡️ **Cross-Platform Kernel Blocking:**
+  * **Windows:** Dynamically injects `netsh advfirewall` rules.
+  * **Linux:** Dynamically writes `iptables` DROP policies.
+* ⚡ **Asynchronous Thread-Safe GUI:** The UI never freezes. A robust Queue-based architecture separates the heavy packet-sniffing daemon from the presentation layer.
+* ⚙️ **Dynamic Configuration:** Whitelists, blacklists, and threshold sensitivities are managed via a persistent `config.json` file.
+* 📊 **Live Dashboard & Traffic Monitor:** View allowed/blocked packets, current rules, and security events in a beautiful Dark-Mode UI.
+* 📝 **Professional Log Rotation:** Structured event logging with automatic log rotation to prevent disk space exhaustion.
 
 ---
 
-## 🏗️ System Requirements
+## 📸 Application Screenshots
 
-This project relies on Linux-specific network management tools.
+> *(Note: Add your actual screenshots here by uploading them to your GitHub repo and replacing the links)*
 
-* **Operating System:** Linux (Debian/Ubuntu, Arch, Fedora, etc.)
-* **Core Dependency:** `iptables` (Must be installed and accessible)
-* **Python Version:** Python 3.6+
-
-### Dependencies
-
-Install the required Python libraries using `pip`:
-
-```bash
-pip install scapy
-```
+| Dashboard View | Live Traffic Monitor |
+| :---: | :---: |
+| <img src="https://via.placeholder.com/400x250.png?text=Dashboard+Screenshot" alt="Dashboard"> | <img src="https://via.placeholder.com/400x250.png?text=Live+Traffic+Screenshot" alt="Traffic"> |
 
 ---
 
-## ⚙️ How It Works (Under the Hood)
+## 🏗️ System Architecture
 
-1. **Continuous Monitoring:** The application listens to incoming network packets on the active network interface.
-2. **Threshold Evaluation:** If a single IP address transmits **more than 50 packets within a 10-second window**, the firewall flags the behavior as a potential DoS attack.
-3. **Automated Blocking:** Upon flagging, the script executes an `iptables` rule to drop further traffic from the malicious IP.
-4. **Log Generation:** Both routine traffic and security events (blocks) are appended to `firewall_logs.txt` for post-incident analysis.
-
----
-
-## 🖥️ Graphical User Interface (GUI)
-
-The interface is built for simplicity and rapid response.
-
-| UI Element          | Functionality                                                             |
-| ------------------- | ------------------------------------------------------------------------- |
-| **Start Firewall**  | Initializes the Scapy sniffer and begins monitoring traffic.              |
-| **Stop Firewall**   | Halts packet sniffing and suspends firewall operations.                   |
-| **IP Entry Box**    | Input field for specifying a custom IP address.                           |
-| **Block IP Button** | Instantly executes an `iptables` drop rule for the entered IP.            |
-| **Status Label**    | Displays real-time operational status, active alerts, and recent actions. |
-
----
-
-## 📂 Execution & Usage
-
-> **⚠️ CRITICAL:** This application requires **root/administrator privileges** to intercept network packets and modify `iptables` rules.
-
-To launch the firewall, open your terminal and run:
-
-```bash
-sudo python3 personal_firewall.py
-```
-
-### Log File Output
-
-Logs are automatically generated in the root directory as `firewall_logs.txt`.
-
-*Example Output:*
+ShieldX follows a modular, object-oriented design pattern:
 
 ```text
-Sat Jun 22 20:35:45 2026: Packet: 192.168.1.5 --> 192.168.1.10
-Sat Jun 22 20:35:50 2026: Blocked IP: 192.168.1.5
+ShieldX/
+├── main.py               # Application entry point & crash handler
+├── ui.py                 # CustomTkinter GUI & Queue Consumer
+├── firewall.py           # Scapy Daemon, Threat Logic & OS Integration
+├── utils.py              # I/O, Logging, and Validation utilities
+├── config.json           # Dynamic settings and IP persistence
+└── requirements.txt      # Python dependencies
+
 ```
 
 ---
 
-## 🚀 Future Roadmap
+## 🚀 Installation & Setup
 
-* [ ] **Windows Integration:** Implement `netsh` support to extend compatibility to Windows environments.
-* [ ] **Dynamic Thresholding:** Allow users to customize the packet limit and time window directly from the GUI.
-* [ ] **Integrated Log Viewer:** Build a tab within the Tkinter app to review logs without opening external text files.
-* [ ] **Desktop Notifications:** Add system-level popup alerts when an IP is automatically blocked.
+### Prerequisites
+
+1. **Python 3.8+** installed on your system.
+2. **Packet Capture Driver:**
+* **Windows:** You must install [Npcap](https://npcap.com/) (Ensure "Install Npcap in WinPcap API-compatible Mode" is checked).
+* **Linux:** Native support via `libpcap`.
+
+
+
+### Installation Steps
+
+1. **Clone the Repository:**
+```bash
+git clone [https://github.com/Anilxbhargav/Project--Personal-Firewall-using-Python.git](https://github.com/Anilxbhargav/Project--Personal-Firewall-using-Python.git)
+cd Project--Personal-Firewall-using-Python
+
+```
+
+
+2. **Create a Virtual Environment (Recommended):**
+```bash
+python -m venv venv
+source venv/bin/activate      # On Linux
+venv\Scripts\activate         # On Windows
+
+```
+
+
+3. **Install Dependencies:**
+```bash
+pip install -r requirements.txt
+
+```
+
+
+4. **Run the Application:**
+> **⚠️ IMPORTANT:** ShieldX requires **Administrator/Root** privileges to intercept raw network packets and modify OS firewall rules.
+
+
+* **Windows (Run CMD/PowerShell as Admin):**
+```cmd
+python main.py
+
+```
+
+
+* **Linux:**
+```bash
+sudo python3 main.py
+
+```
+
+
+
+
+
+---
+
+## ⚙️ Configuration (`config.json`)
+
+You can fine-tune ShieldX's behavior without editing the code. The system automatically creates a `config.json` file on the first run.
+
+```json
+{
+    "settings": {
+        "time_window_seconds": 10,
+        "dos_threshold": 100,        // Packets per time_window to trigger DoS block
+        "port_scan_threshold": 15,   // Unique ports accessed per time_window to trigger Scan block
+        "log_file": "firewall_events.log"
+    },
+    "whitelist": [
+        "127.0.0.1",
+        "192.168.1.1",
+        "8.8.8.8"
+    ],
+    "blacklist": []
+}
+
+```
+
+---
+
+## ⚠️ Disclaimer & Legal
+
+**Educational & Authorized Use Only:** This tool is developed for cybersecurity research, academic demonstration, and authorized network defense. Do not use this tool on networks or systems you do not own or have explicit permission to monitor. The developer is not responsible for any misuse, network disruptions, or damage caused by this software.
 
 ---
 
 ## 🤝 Contributing
 
-Contributions, issues, and feature requests are highly welcome! Feel free to check the issues page or fork the repository and submit a Pull Request.
+Contributions, issues, and feature requests are welcome!
+If you'd like to improve ShieldX, please fork the repository and create a pull request.
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
 ---
+
+## 📄 License
+
+Distributed under the **MIT License**. See `LICENSE` for more information.
